@@ -384,8 +384,7 @@ Namely, $l_{i j} \equiv(i, j)$ stands for an arc from $i$ to $j$, and $l_{i j} \
 #slide[
 
 #text(font : "Lato", size : 16pt)[
-  - Consider a bipartite graph of users and objects such as that shown in Figure 1.8, in which the existence of
-the link between node $i$ and node $alpha$ denotes that user $u_i$ has selected object $o_alpha$.
+  - Consider a bipartite graph of users and objects such as that shown in Figure 1.8, in which the existence of the link between node $i$ and node $alpha$ denotes that user $u_i$ has selected object $o_alpha$.
   - A famous personalised recommendation system, known as #text(fill: ukj-blue)[*collaborative filtering*] (CF), is based on the construction of a $N times N$ #text(fill: red)[*user similarity matrix*] $S = {s_(i j)}$.
   - The similarity between two users $u_i$ and $u_j$ can be expressed in terms of the adjacency matrix of the graph as:
 
