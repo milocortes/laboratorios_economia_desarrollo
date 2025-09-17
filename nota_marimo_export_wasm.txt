@@ -1,2 +1,0 @@
-uv run marimo export html-wasm redes_bipartitas_sistemas_recomendacion.py -o doc/mdbook/src/laboratorios/redes_bipartitas_sistemas_recomendacion/ --mode edit --show-code --force --sandbox
-

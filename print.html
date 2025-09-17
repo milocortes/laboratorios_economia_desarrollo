@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Laboratorios Economía para el Desarrollo</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introducción</a></li><li class="chapter-item expanded affix "><li class="part-title">Laboratorios</li><li class="chapter-item expanded "><a href="laboratorios/redes_bipartitas_sistemas_recomendacion/index.html"><strong aria-hidden="true">1.</strong> Redes Bipartitas y sistemas de recomendación</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Complejidad Económica (ECI, PCI)</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Identificación de oportunidades de diversificación industrial</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Regresiones de Crecimiento, Apariciones y Desapariciones</div></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Laboratorios Economía para el Desarrollo</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introducción"><a class="header" href="#introducción">Introducción</a></h1>
+<p>Laboratorios de la clase Economía para el Desarrollo del Doctorado en Política Pública del ITESM.</p>
+<h1 id="contenido"><a class="header" href="#contenido">Contenido</a></h1>
+<h2 id="laboratorios"><a class="header" href="#laboratorios">Laboratorios</a></h2>
+<ul>
+<li><a href="./laboratorios/redes_bipartitas_sistemas_recomendacion/index.html">Redes Bipartitas y sistemas de recomendación</a></li>
+<li><a href="">Complejidad Económica (ECI, PCI)</a></li>
+<li><a href="">Identificación de oportunidades de diversificación industrial</a></li>
+<li><a href="">Regresiones de Crecimiento, Apariciones y Desapariciones</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <!-- Preload is necessary because we show these images when we disconnect from the server,
+    but at that point we cannot load these images from the server -->
+    <link rel="preload" href="./assets/gradient-yHQUC_QB.png" as="image" />
+    <link rel="preload" href="./assets/noise-60BoTA8O.png" as="image" />
+    <!-- Preload the fonts -->
+    <link rel="preload" href="./assets/Lora-VariableFont_wght-B2ootaw-.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Regular-CxL0S8W7.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Bold-D9fedIX3.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Regular-BTCkDNvf.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Medium-DU3aDxX5.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Bold-CLVRCuM9.ttf" as="font" crossorigin="anonymous" />
+<pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+&lt;meta name="theme-color" content="#000000" /&gt;
+&lt;meta name="description" content="a marimo app" /&gt;
+&lt;link rel="apple-touch-icon" href="./apple-touch-icon.png" /&gt;
+&lt;link rel="manifest" href="./manifest.json" /&gt;
+
+&lt;script data-marimo="true"&gt;
+  function __resizeIframe(obj) {
+    var scrollbarHeight = 20; // Max between windows, mac, and linux
+
+    function setHeight() {
+      var element = obj.contentWindow.document.documentElement;
+      // If there is no vertical scrollbar, we don't need to resize the iframe
+      if (element.scrollHeight === element.clientHeight) {
+        return;
+      }
+
+      // Create a new height that includes the scrollbar height if it's visible
+      var hasHorizontalScrollbar = element.scrollWidth &gt; element.clientWidth;
+      var newHeight = element.scrollHeight + (hasHorizontalScrollbar ? scrollbarHeight : 0);
+
+      // Only update the height if it's different from the current height
+      if (obj.style.height !== `${newHeight}px`) {
+        obj.style.height = `${newHeight}px`;
+      }
+    }
+
+    // Resize the iframe to the height of the content and bottom scrollbar height
+    setHeight();
+
+    // Resize the iframe when the content changes
+    const resizeObserver = new ResizeObserver((entries) =&gt; {
+      setHeight();
+    });
+    resizeObserver.observe(obj.contentWindow.document.body);
+  }
+&lt;/script&gt;
+&lt;marimo-filename hidden&gt;notebook.py&lt;/marimo-filename&gt;
+&lt;!-- TODO(Trevor): Legacy, required by VS Code plugin. Remove when plugin is updated (see marimo/server/_templates/template.py) --&gt;
+&lt;marimo-version data-version="{{ version }}" hidden&gt;&lt;/marimo-version&gt;
+&lt;marimo-user-config data-config="{{ user_config }}" hidden&gt;&lt;/marimo-user-config&gt;
+&lt;marimo-server-token data-token="{{ server_token }}" hidden&gt;&lt;/marimo-server-token&gt;
+&lt;!-- /TODO --&gt;
+&lt;title&gt;redes bipartitas sistemas recomendacion&lt;/title&gt;
+&lt;script type="module" crossorigin src="./assets/index-OC46250R.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" crossorigin href="./assets/index-CknhX2Vy.css"&gt;
+</code></pre>
+<p><marimo-wasm hidden=""></marimo-wasm>
+<script>
+if (window.location.protocol === 'file:') {
+alert('Warning: This file must be served by an HTTP server to function correctly.');
+}
+</script></p>
+<pre><code>&lt;style&gt;
+    #save-button {
+        display: none !important;
+    }
+    #filename-input {
+        display: none !important;
+    }
+&lt;/style&gt;
+&lt;marimo-code hidden=""&gt;import%20marimo%0A%0A__generated_with%20%3D%20%220.15.5%22%0Aapp%20%3D%20marimo.App(width%3D%22medium%22)%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_(mo)%3A%0A%20%20%20%20mo.md(r%22%22%22%23%20Redes%20Bipartitas%20y%20Sistemas%20de%20Recomendaci%C3%B3n%22%22%22)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20import%20marimo%20as%20mo%0A%20%20%20%20return%20(mo%2C)%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20import%20numpy%20as%20np%0A%20%20%20%20import%20networkx%20as%20nx%0A%20%20%20%20import%20matplotlib.pyplot%20as%20plt%0A%20%20%20%20return%20np%2C%20nx%2C%20plt%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_(mo)%3A%0A%20%20%20%20mo.md(%0A%20%20%20%20%20%20%20%20r%22%22%22%0A%20%20%20%20Consider%20the%20adjacency%20matrix%3A%0A%0A%20%20%20%20%5Cbegin%7Bequation%7D%0A%20%20%20%20%20%20%20%20A%3D%5Cleft(%5Cbegin%7Barray%7D%7Blllll%7D%0A%20%20%20%20%20%20%20%200%20%26%201%20%26%200%20%26%200%20%26%200%20%5C%5C%0A%20%20%20%20%20%20%20%200%20%26%200%20%26%201%20%26%201%20%26%201%20%5C%5C%0A%20%20%20%20%20%20%20%200%20%26%200%20%26%200%20%26%200%20%26%200%20%5C%5C%0A%20%20%20%20%20%20%20%200%20%26%200%20%26%200%20%26%200%20%26%201%20%5C%5C%0A%20%20%20%20%20%20%20%201%20%26%200%20%26%200%20%26%200%20%26%200%0A%20%20%20%20%20%20%20%20%5Cend%7Barray%7D%5Cright)%0A%20%20%20%20%5Cend%7Bequation%7D%0A%0A%20%20%20%20Is%20the%20corresponding%20graph%20directed%20or%20undirected%3F%20Draw%20the%20graph.%0A%20%20%20%20%22%22%22%0A%20%20%20%20)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(np%2C%20nx%2C%20plt)%3A%0A%20%20%20%20%23%20Definimos%20la%20matriz%20de%20adyacencia%20como%20un%20arreglo%20de%20numpy%202D%0A%20%20%20%20A%20%3D%20np.array(%0A%20%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C1%2C0%2C0%2C0%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C0%2C1%2C1%2C1%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C0%2C0%2C0%2C0%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C0%2C0%2C0%2C1%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%5B1%2C0%2C0%2C0%2C0%5D%0A%20%20%20%20%20%20%20%20%20%5D%20%20%20%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20Creamos%20la%20gr%C3%A1fica%20dirigida%20a%20partir%20de%20la%20matriz%20de%20adyacencia%0A%20%20%20%20G_directed%20%3D%20nx.from_numpy_array(A%2C%20create_using%3Dnx.DiGraph)%0A%0A%20%20%20%20%23%20Visualizamos%20la%20gr%C3%A1fica%0A%20%20%20%20nx.draw(G_directed%2C%20with_labels%3DTrue%2C%20arrowsize%3D20%2C%20node_color%3D'lightblue'%2C%20edge_color%3D'gray')%0A%20%20%20%20plt.show()%0A%20%20%20%20return%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_(mo)%3A%0A%20%20%20%20mo.md(%0A%20%20%20%20%20%20%20%20r%22%22%22%0A%20%20%20%20Consider%20the%20%24N%20%5Ctimes%20V%24%20adjacency%20matrix%20with%20%24N%3D4%24%20and%20%24V%3D6%24%20%3A%0A%0A%20%20%20%20%5Cbegin%7Bequation%7D%0A%20%20%20%20A%3D%5Cleft(%5Cbegin%7Barray%7D%7Bllllll%7D%0A%20%20%20%201%20%26%200%20%26%201%20%26%200%20%26%200%20%26%201%20%5C%5C%0A%20%20%20%201%20%26%201%20%26%201%20%26%201%20%26%200%20%26%200%20%5C%5C%0A%20%20%20%200%20%26%201%20%26%201%20%26%200%20%26%201%20%26%201%20%5C%5C%0A%20%20%20%200%20%26%200%20%26%201%20%26%201%20%26%201%20%26%200%0A%20%20%20%20%5Cend%7Barray%7D%5Cright)%0A%20%20%20%20%5Ctag%7B2%7D%0A%20%20%20%20%5Cend%7Bequation%7D%0A%0A%0A%20%20%20%20Draw%20the%20corresponding%20bipartite%20graph.%20Construct%20the%20%24N%20%5Ctimes%20N%24%20matrix%20%24B%3DA%20A%5E%7B%5Ctop%7D%24%20that%20describes%20the%20projection%20on%20the%20first%20set%20of%20nodes.%20What%20is%20the%20meaning%20of%20the%20off-diagonal%20terms%20and%20that%20of%20the%20diagonal%20terms%20in%20such%20a%20matrix%3F%20%0A%20%20%20%20%22%22%22%0A%20%20%20%20)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(np%2C%20nx)%3A%0A%20%20%20%20from%20scipy.sparse%20import%20csr_matrix%0A%0A%20%20%20%20%23%20Definimos%20la%20matrix%20de%20adyacencia%20N%20X%20V%0A%20%20%20%20A_nv%20%3D%20np.array(%0A%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B1%2C0%2C1%2C0%2C0%2C1%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B1%2C1%2C1%2C1%2C0%2C0%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C1%2C1%2C0%2C1%2C1%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B0%2C0%2C1%2C1%2C1%2C0%5D%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20Convertimos%20el%20arreglo%202D%20de%20numpy%20a%20una%20matriz%20dispersa%20de%20scipy%20%0A%20%20%20%20A_matrix_sparse%20%3D%20csr_matrix(A_nv)%0A%0A%20%20%20%20%23%20Creanmos%20la%20gr%C3%A1fica%20bipartita%20de%20la%20matrix%20de%20adyacencia%20N%20X%20V%20dispersa%0A%20%20%20%20B%20%3D%20nx.algorithms.bipartite.matrix.from_biadjacency_matrix(A_matrix_sparse)%0A%0A%20%20%20%20%23%20Verificamos%20que%20la%20gr%C3%A1fica%20sea%20bipartita%20e%20identificamos%20los%20conjuntos%20de%20nodos%20U%20y%20O%0A%20%20%20%20%23%20Autom%C3%A1ticamente%20NetworkX%20asigna%200%20y%201%20a%20las%20particiones%20de%20nodos%20de%20acuerdo%20a%20la%20estructura%20de%20la%20matriz%0A%20%20%20%20%23%20El%20n%C3%BAmero%20de%20nodos%20en%20la%20partici%C3%B3n%200%20corresponde%20al%20n%C3%BAmero%20de%20filas%20en%20la%20matriz%0A%20%20%20%20%23%20y%20el%20n%C3%BAmero%20de%20nodos%20en%20la%20partici%C3%B3n%201%20corresponde%20al%20n%C3%BAmero%20de%20columnas%0A%20%20%20%20left_nodes%2C%20right_nodes%20%3D%20nx.bipartite.sets(B)%0A%0A%20%20%20%20print(f%22Nodos%20en%20la%20partici%C3%B3n%20izquierda%20(U)%3A%20%7Blist(left_nodes)%7D%22)%0A%20%20%20%20print(f%22Nodos%20en%20la%20partici%C3%B3n%20derecha%20(O)%3A%20%7Blist(right_nodes)%7D%22)%0A%20%20%20%20print(f%22Aristas%20en%20la%20gr%C3%A1fica%20bipartita%3A%20%7Blist(B.edges())%7D%22)%0A%20%20%20%20return%20A_nv%2C%20B%2C%20left_nodes%2C%20right_nodes%0A%0A%0A%40app.cell%0Adef%20_(B%2C%20nx%2C%20plt)%3A%0A%20%20%20%20%23%23%23%20Visualizamos%20la%20gr%C3%A1fica%20bipartita%0A%0A%20%20%20%20def%20visualiza_grafica_bipartita(B%20%3A%20nx.bipartite)%20-%3E%20None%3A%0A%20%20%20%20%20%20%20%20%23%20Obtenemos%20el%20conjunto%20de%20nodos%20en%20las%20dos%20particiones%0A%20%20%20%20%20%20%20%20left_nodes%2C%20right_nodes%20%3D%20nx.bipartite.sets(B)%0A%20%20%20%20%20%20%20%20%23%20Determinamos%20la%20posici%C3%B3n%20de%20los%20nodos%20(Layout)%0A%20%20%20%20%20%20%20%20pos%20%3D%20nx.bipartite_layout(B%2C%20left_nodes)%0A%0A%20%20%20%20%20%20%20%20%23%20Dibujamos%20la%20gr%C3%A1fica%0A%20%20%20%20%20%20%20%20plt.figure(figsize%3D(8%2C%206))%20%23%20Adjust%20figure%20size%20as%20needed%0A%0A%20%20%20%20%20%20%20%20nx.draw_networkx_nodes(B%2C%20pos%2C%20nodelist%3Dleft_nodes%2C%20node_color%3D'skyblue'%2C%20node_size%3D1000%2C%20label%3D'Set%20U')%0A%20%20%20%20%20%20%20%20nx.draw_networkx_nodes(B%2C%20pos%2C%20nodelist%3Dright_nodes%2C%20node_color%3D'lightcoral'%2C%20node_size%3D1000%2C%20label%3D'Set%20O')%0A%20%20%20%20%20%20%20%20nx.draw_networkx_edges(B%2C%20pos%2C%20width%3D1.0%2C%20alpha%3D0.5)%0A%20%20%20%20%20%20%20%20nx.draw_networkx_labels(B%2C%20pos%2C%20font_size%3D10%2C%20font_color%3D'black')%0A%0A%20%20%20%20%20%20%20%20%23%20Agreg%C3%A1mos%20t%C3%ADtulo%20y%20leyendas%0A%20%20%20%20%20%20%20%20plt.title(%22Gr%C3%A1fica%20Bipartita%22)%0A%20%20%20%20%20%20%20%20plt.legend()%0A%20%20%20%20%20%20%20%20plt.axis('off')%20%23%20Hide%20axes%0A%0A%20%20%20%20%20%20%20%20%23%20Visualizamos%0A%20%20%20%20%20%20%20%20plt.show()%0A%0A%20%20%20%20visualiza_grafica_bipartita(B)%0A%20%20%20%20return%20(visualiza_grafica_bipartita%2C)%0A%0A%0A%40app.cell%0Adef%20_(left_nodes%2C%20right_nodes)%3A%0A%20%20%20%20%23%20Renombranos%20nombres%20de%20los%20nodos%0A%0A%20%20%20%20%23%20Definimos%20un%20diccionario%20para%20renombrar%20los%20nombres%20de%20los%20nodos%20del%20conjunto%20U%2C%20conjunto%20'bipartite%3D0'%0A%20%20%20%20mapping_setU%20%3D%20%7Bu%20%3A%20f%22User-%7Bu%2B1%7D%22%20for%20u%20in%20left_nodes%7D%0A%0A%20%20%20%20%23%20Definimos%20un%20diccionario%20para%20renombrar%20los%20nombres%20de%20los%20nodos%20del%20conjunto%20O%2C%20conjunto%20'bipartite%3D1'%0A%20%20%20%20mapping_setO%20%3D%20%7Bo%20%3A%20f%22Object-%7Bo-len(left_nodes)%20%2B%201%7D%22%20for%20o%20in%20right_nodes%7D%0A%0A%20%20%20%20%23%20Combinamos%20los%20diccionarios%0A%20%20%20%20combined_mapping%20%3D%20%7B**mapping_setU%2C%20**mapping_setO%7D%0A%20%20%20%20combined_mapping%0A%20%20%20%20return%20(combined_mapping%2C)%0A%0A%0A%40app.cell%0Adef%20_(B%2C%20combined_mapping%2C%20nx%2C%20visualiza_grafica_bipartita)%3A%0A%20%20%20%20%23%20Relabel%20the%20nodes%0A%20%20%20%20B_renamed%20%3D%20nx.relabel_nodes(B%2C%20combined_mapping%2C%20copy%3DTrue)%0A%20%20%20%20visualiza_grafica_bipartita(B_renamed)%0A%20%20%20%20return%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_(mo)%3A%0A%20%20%20%20mo.md(r%22%22%22Construct%20the%20%24N%20%5Ctimes%20N%24%20matrix%20%24B%3DA%20A%5E%7B%5Ctop%7D%24%20that%20describes%20the%20projection%20on%20the%20first%20set%20of%20nodes.%20What%20is%20the%20meaning%20of%20the%20off-diagonal%20terms%20and%20that%20of%20the%20diagonal%20terms%20in%20such%20a%20matrix%3F%20%22%22%22)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(A_nv)%3A%0A%20%20%20%20B_proyeccion_U%20%3D%20A_nv%20%40%20A_nv.T%0A%20%20%20%20B_proyeccion_U%0A%20%20%20%20return%20(B_proyeccion_U%2C)%0A%0A%0A%40app.cell%0Adef%20_(B_proyeccion_U%2C%20np)%3A%0A%20%20%20%20%23%23%20Eliminamos%20%22rizos%22%20(self%20loop%20edges)%0A%20%20%20%20np.fill_diagonal(B_proyeccion_U%2C%200)%0A%20%20%20%20B_proyeccion_U%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(B_proyeccion_U%2C%20left_nodes%2C%20nx%2C%20plt)%3A%0A%20%20%20%20%23%20Creamos%20la%20gr%C3%A1fica%20dirigida%20a%20partir%20de%20la%20proyecci%C3%B3n%20de%20AA'%0A%20%20%20%20G_proyeccion%20%3D%20nx.from_numpy_array(B_proyeccion_U%2C%20create_using%3Dnx.Graph)%0A%0A%20%20%20%20%23%20Definimos%20un%20diccionario%20para%20renombrar%20los%20nombres%20de%20los%20nodos%20del%20conjunto%20U%2C%20conjunto%20'bipartite%3D0'%0A%20%20%20%20mapping_setU_min%20%3D%20%7Bu%20%3A%20f%22U%7Bu%2B1%7D%22%20for%20u%20in%20left_nodes%7D%0A%0A%20%20%20%20G_proyeccion%20%3D%20nx.relabel_nodes(G_proyeccion%2C%20mapping_setU_min%2C%20copy%3DTrue)%0A%0A%0A%20%20%20%20%23%20Visualizamos%20la%20gr%C3%A1fica%0A%20%20%20%20elarge%20%3D%20%5B(u%2C%20v)%20for%20(u%2C%20v%2C%20d)%20in%20G_proyeccion.edges(data%3DTrue)%20if%20d%5B%22weight%22%5D%20%3E%201%5D%0A%20%20%20%20esmall%20%3D%20%5B(u%2C%20v)%20for%20(u%2C%20v%2C%20d)%20in%20G_proyeccion.edges(data%3DTrue)%20if%20d%5B%22weight%22%5D%20%3C%3D%201%5D%0A%0A%20%20%20%20pos%20%3D%20nx.spring_layout(G_proyeccion%2C%20seed%3D7)%20%20%23%20positions%20for%20all%20nodes%20-%20seed%20for%20reproducibility%0A%0A%20%20%20%20%23%20nodes%0A%20%20%20%20nx.draw_networkx_nodes(G_proyeccion%2C%20pos%2C%20node_size%3D700)%0A%0A%20%20%20%20%23%20edges%0A%20%20%20%20nx.draw_networkx_edges(G_proyeccion%2C%20pos%2C%20edgelist%3Delarge%2C%20width%3D6)%0A%20%20%20%20nx.draw_networkx_edges(%0A%20%20%20%20%20%20%20%20G_proyeccion%2C%20pos%2C%20edgelist%3Desmall%2C%20width%3D6%2C%20alpha%3D0.5%2C%20edge_color%3D%22b%22%2C%20style%3D%22dashed%22%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20node%20labels%0A%20%20%20%20nx.draw_networkx_labels(G_proyeccion%2C%20pos%2C%20font_size%3D15%2C%20font_family%3D%22sans-serif%22%2C%20font_color%20%3D%20%22white%22)%0A%20%20%20%20%23%20edge%20weight%20labels%0A%20%20%20%20edge_labels%20%3D%20nx.get_edge_attributes(G_proyeccion%2C%20%22weight%22)%0A%20%20%20%20nx.draw_networkx_edge_labels(G_proyeccion%2C%20pos%2C%20edge_labels)%0A%0A%20%20%20%20ax%20%3D%20plt.gca()%0A%20%20%20%20ax.margins(0.08)%0A%20%20%20%20plt.axis(%22off%22)%0A%20%20%20%20plt.tight_layout()%0A%20%20%20%20plt.show()%0A%20%20%20%20return%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_(mo)%3A%0A%20%20%20%20mo.md(%0A%20%20%20%20%20%20%20%20r%22%22%22%0A%20%20%20%20Consider%20the%20bipartite%20graph%20with%20%24N%20%3D%204%24%20and%20%24V%20%3D%206%24%20corresponding%20to%20the%20%24N%20%5Ctimes%20V%24%20matrix%20%24A%24%20given%20in%20Eq.(2).%20Imagine%20the%20graph%20describes%20how%20%24N%24%20users%20have%20selected%20%24V%24%20objects.%20Suppose%2C%20now%2C%20you%20want%20to%20recommend%20objects%20to%20users%20by%20means%20of%20the%20CF%20method.%20%0A%0A%20%20%20%20Use%20the%20equation%0A%0A%0A%20%20%20%20%5Cbegin%7Bequation%7D%0A%20%20%20%20s_%7Bi%20j%7D%3D%5Cfrac%7B%5Csum_%7B%5Calpha%3D1%7D%5EV%20a_%7Bi%20%5Calpha%7D%20a_%7Bj%20%5Calpha%7D%7D%7B%5Cmin%20%5Cleft%5C%7Bk_%7Bu_i%7D%2C%20k_%7Bu_j%7D%5Cright%5C%7D%7D%2C%0A%20%20%20%20%5Ctag%7B3%7D%0A%20%20%20%20%5Cend%7Bequation%7D%0A%0A%0A%20%20%20%20and%20the%20equation%0A%0A%20%20%20%20%5Cbegin%7Bequation%7D%0A%20%20%20%20r_%7Bi%20%5Calpha%7D%3D%5Cfrac%7B%5Csum_%7Bj%3D1%2C%20j%20%5Cneq%20i%7D%5EN%20s_%7Bi%20j%7D%20a_%7Bj%20%5Calpha%7D%7D%7B%5Csum_%7Bj%3D1%2C%20j%20%5Cneq%20i%7D%5EN%20s_%7Bi%20j%7D%7D%20.%0A%20%20%20%20%5Ctag%7B4%7D%0A%20%20%20%20%5Cend%7Bequation%7D%0A%0A%0A%20%20%20%20to%20compute%20the%20recommendation%20score%20for%20each%20user.%0A%20%20%20%20%22%22%22%0A%20%20%20%20)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(A_nv%2C%20np)%3A%0A%20%20%20%20similarity%20%3D%20(A_nv%20%40%20A_nv.T)%2Fnp.sum(A_nv%2C%20axis%3D1)%5Bnp.newaxis%2C%3A%5D%0A%20%20%20%20similarity%20%3D%20np.maximum(similarity%2C%20similarity.T)%0A%20%20%20%20similarity%0A%20%20%20%20return%20(similarity%2C)%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(A_nv%2C%20np%2C%20similarity)%3A%0A%20%20%20%20recomendation_matrix%20%3D%20(np.dot(A_nv.T%2Csimilarity)%2Fnp.sum(similarity%2C%20axis%3D1)).T%0A%20%20%20%20recomendation_matrix%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20return%0A%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20app.run()%0A&lt;/marimo-code&gt;&lt;/head&gt;
+</code></pre>
+  <body>
+    <div id="root"></div>
+    <!-- This is a portal for the data editor to render in -->
+    <div id="portal" data-testid="glide-portal" style="position: fixed; left: 0; top: 0; z-index: 9999"></div>
+    <script data-marimo="true">
+      window.__MARIMO_MOUNT_CONFIG__ = {
+            "filename": "notebook.py",
+            "mode": "edit",
+            "version": "0.15.5",
+            "serverToken": "unused",
+            "config": {"ai": {"models": {"custom_models": [], "displayed_models": []}}, "completion": {"activate_on_typing": true, "copilot": false}, "display": {"cell_output": "above", "code_editor_font_size": 14, "dataframes": "rich", "default_table_max_columns": 50, "default_table_page_size": 10, "default_width": "medium", "reference_highlighting": false, "theme": "light"}, "formatting": {"line_length": 79}, "keymap": {"overrides": {}, "preset": "default"}, "language_servers": {"pylsp": {"enable_flake8": false, "enable_mypy": true, "enable_pydocstyle": false, "enable_pyflakes": false, "enable_pylint": false, "enable_ruff": true, "enabled": true}}, "package_management": {"manager": "uv"}, "runtime": {"auto_instantiate": true, "auto_reload": "off", "default_sql_output": "auto", "on_cell_change": "autorun", "output_max_bytes": 8000000, "reactive_tests": true, "std_stream_max_bytes": 1000000, "watcher_on_save": "lazy"}, "save": {"autosave": "off", "autosave_delay": 1000, "format_on_save": false}, "server": {"browser": "default", "follow_symlink": false}, "snippets": {"custom_paths": [], "include_default_snippets": true}},
+            "configOverrides": {},
+            "appConfig": {"sql_output": "auto", "width": "medium"},
+            "view": {"showAppCode": true},
+            "notebook": null,
+            "session": null,
+            "runtimeConfig": null,
+        };
+    </script>
+  </body>
+</html>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
