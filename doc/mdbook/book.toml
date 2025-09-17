@@ -1,0 +1,6 @@
+[book]
+authors = ["Hermilo Cortes"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Laboratorios Economía para el Desarrollo"
