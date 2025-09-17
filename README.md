@@ -6,7 +6,7 @@ Laboratorios de la clase Economía para el Desarrollo del Doctorado en Política
 
 - Redes Bipartitas y sistemas de recomendación:
     - [Slides](./doc/slides/redes_bipartitas_sistemas_recomendacion/redes_bipartitas.pdf)
-    - [Notebook]()
+    - [Notebook](https://milocortes.github.io/laboratorios_economia_desarrollo/laboratorios/redes_bipartitas_sistemas_recomendacion/index.html)
 
 - Complejidad Económica (ECI, PCI):
     - [Slides]()
