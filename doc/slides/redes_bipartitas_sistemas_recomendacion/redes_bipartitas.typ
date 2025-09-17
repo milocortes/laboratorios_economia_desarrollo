@@ -409,3 +409,15 @@ Namely, $l_{i j} \equiv(i, j)$ stands for an arc from $i$ to $j$, and $l_{i j} \
 ]
 
 ]
+
+#slide[
+
+#text(font : "Lato", size : 16pt)[
+  - At the numerator, we sum the similarity between user $u_i$ and all the other users that have chosen object $o_alpha$.
+  - In practice, we count the number of users that chose object $o_alpha$, weighting each of them with the similarity with user $u_i$.
+  - The normalisation at the denominator guarantees that $r_(i alpha)$ ranges in the interval $[0,1]$.
+  -  Finally, in order to recommend items to a user $u_i$, we need to compute the values of the recommendation score $r_(i alpha)$ for all objects $o_alpha, alpha=1, dots, V$, such that $a_(i alpha)=0$.
+  - Then, all the non-zero values of $r_(i alpha)$ are sorted in decreasing order, and the objects in the top of the list are recommended to user $u_i$.
+]
+
+]
