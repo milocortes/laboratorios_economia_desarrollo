@@ -85,7 +85,7 @@ def _(mo):
     \end{equation}
 
 
-    Draw the corresponding bipartite graph. Construct the $N \times N$ matrix $B=A A^{\top}$ that describes the projection on the first set of nodes. What is the meaning of the off-diagonal terms and that of the diagonal terms in such a matrix? 
+    Draw the corresponding bipartite graph. Construct the $N \times N$ matrix $B=A A^{\top}$ that describes the projection on the first set of nodes. What is the meaning of the off-diagonal terms and that of the diagonal terms in such a matrix?
     """
     )
     return
@@ -132,20 +132,20 @@ def _(B, nx, plt):
         left_nodes, right_nodes = nx.bipartite.sets(B)
         # Determinamos la posición de los nodos (Layout)
         pos = nx.bipartite_layout(B, left_nodes)
-    
+
         # Dibujamos la gráfica
         plt.figure(figsize=(8, 6)) # Adjust figure size as needed
-    
+
         nx.draw_networkx_nodes(B, pos, nodelist=left_nodes, node_color='skyblue', node_size=1000, label='Set U')
         nx.draw_networkx_nodes(B, pos, nodelist=right_nodes, node_color='lightcoral', node_size=1000, label='Set O')
         nx.draw_networkx_edges(B, pos, width=1.0, alpha=0.5)
         nx.draw_networkx_labels(B, pos, font_size=10, font_color='black')
-    
+
         # Agregámos título y leyendas
         plt.title("Gráfica Bipartita")
         plt.legend()
         plt.axis('off') # Hide axes
-    
+
         # Visualizamos
         plt.show()
 
@@ -179,7 +179,7 @@ def _(B, combined_mapping, nx, visualiza_grafica_bipartita):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Construct the $N \times N$ matrix $B=A A^{\top}$ that describes the projection on the first set of nodes. What is the meaning of the off-diagonal terms and that of the diagonal terms in such a matrix? """)
+    mo.md(r"""Construct the $N \times N$ matrix $B=A A^{\top}$ that describes the projection on the first set of nodes. What is the meaning of the off-diagonal terms and that of the diagonal terms in such a matrix?""")
     return
 
 
@@ -252,7 +252,7 @@ def _(mo):
     \tag{3}
     \end{equation}
 
-        
+
     and the equation
 
     \begin{equation}
@@ -260,7 +260,7 @@ def _(mo):
     \tag{4}
     \end{equation}
 
-        
+
     to compute the recommendation score for each user.
     """
     )
