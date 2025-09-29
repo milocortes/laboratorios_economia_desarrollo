@@ -62,7 +62,7 @@
 
   Hermilo Cortés González
 
-  July 23, 2023
+  18 Septiembre 2024
 ]
 
 #new-section-slide("Directed, Weighted and Bipartite Graphs")
