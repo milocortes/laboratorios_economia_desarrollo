@@ -444,7 +444,7 @@ donde $S = M U^(-1) M^'$ es una matriz de similaridad simétrica en que cada ele
 
 
 
-$ Y_(c p) = A (1- #pin(1)q_p#pin(2) #pin(3) (1-r_c) #pin(4)) $
+#text(font: "Lato", size : 20pt)[$ Y_(c p) = A (1- #pin(1)q_p#pin(2) #pin(3) (1-r_c) #pin(4)) $]
 
 #pinit-highlight-equation-from((1,2), (1, 2), height: 3.5em, pos: bottom, fill: rgb(0, 180, 255))[
   Probabilidad que la actividad $p$ requiera la capacidad
@@ -461,7 +461,7 @@ $ Y_(c p) = A (1- #pin(1)q_p#pin(2) #pin(3) (1-r_c) #pin(4)) $
   - Para un número arbitrario de factores, la fórmula se generaliza a :
 #v(5em)
 
-$ #pin(5) Y_(c p) #pin(6) = A product_(b=1)^(N_b)  (1- #pin(7)q_(p,b)#pin(8) #pin(9) (1-r_(c,b)) #pin(10)) $
+#text(font: "Lato", size : 20pt)[$ #pin(5) Y_(c p) #pin(6) = A product_(b=1)^(N_b)  (1- #pin(7)q_(p,b)#pin(8) #pin(9) (1-r_(c,b)) #pin(10)) $]
 
 #pinit-highlight-equation-from((5,6), (5, 6), height: 3.5em, pos: bottom, fill: rgb(255, 69, 0))[
   Output
