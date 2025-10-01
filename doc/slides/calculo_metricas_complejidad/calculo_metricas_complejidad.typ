@@ -122,9 +122,11 @@
 
       - Definiendo la suma de la matriz completa como  $X = sum_(c p) X_(c p)$ y usando la notación de Einsten en la que índices omitidos indizan variables sumadas #footnote[Para cualquier matrix$A_(i j)$, $A_i = sum_j A_(i j)$], la Matriz de Especialización $R_(c p)$ es 
 
-      $
-        R_(c p) = (X_(c p) X)/(X_c X_p)
-      $
+      #mitex(
+        `
+        $\mathrm{RCA}_{c p}= \dfrac{X_{c p} X}{X_c X_p}  = \frac{x_{c p} / \Sigma_p x_{c p}}{\Sigma_c x_{c p} / \Sigma_c \Sigma_p x_{c p}}$
+        `
+      )
 
       $R_(c p)$ es la razón entre el nivel observado, $X_(c p)$, y el nivel esperado, $(X_c X_p)/X$, de actividad económica en una ubicación. 
 
@@ -255,7 +257,7 @@ donde $R^(star)=1$ cuando usamos $R$ y $R^(star)=0.25$ cuando usamos $R^("pop")$
   #text(font: "Lato", size : 20pt)[
   == Relatedness Density
 
-  - Hay múltiples formas de medir Proximidad. Algunas, como la #text(fill: ukj-blue)[*probabilidad condicional mínima*], miran a la colocalización o coaglomeración de actividades:
+  - Hay múltiples formas de medir #text(fill: ukj-blue)[*Proximidad*]. Algunas, como la #text(fill: ukj-blue)[*probabilidad condicional mínima*], miran a la colocalización o coaglomeración de actividades:
 
   #mitex(
   `
