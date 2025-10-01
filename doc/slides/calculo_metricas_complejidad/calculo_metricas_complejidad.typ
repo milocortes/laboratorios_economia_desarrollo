@@ -47,7 +47,7 @@
   footer: [
     #set text(size: .6em)
     #set align(horizon)
-    Economía para el Desarrollo. Laboratorio 1
+    Economía para el Desarrollo. Laboratorio 2
     //Andreas Kröpelin, January 2025 #h(1fr) #toolbox.slide-number
     #h(1fr) #box(image("images/tecnologico-de-monterrey-blue.png", height: 2em)) | #toolbox.slide-number
   ],
@@ -204,7 +204,7 @@ donde $R^(star)=1$ cuando usamos $R$ y $R^(star)=0.25$ cuando usamos $R^("pop")$
   == Relatedness Density
 
   - #text(fill: ukj-blue)[*Relatedness Density*] mira al número de actividades similares presentes en una ubicación.
-  - Para calcular esta medida, primero definimos una  #text(fill: ukj-blue)[*proximidad*].
+  - Para calcular esta medida, primero definimos una  #text(fill: ukj-blue)[*Proximidad*].
   - Las medidas de proximidad conectan #text(fill: orange)[*parejas de actividades*], $phi.alt_(p p)$, o #text(fill: orange)[*parejas de ubicaciones*], $phi.alt_(c c)$.
 
 
@@ -255,7 +255,7 @@ donde $R^(star)=1$ cuando usamos $R$ y $R^(star)=0.25$ cuando usamos $R^("pop")$
   #text(font: "Lato", size : 20pt)[
   == Relatedness Density
 
-  - Hay múltiples formas de medir proximidad. Algunas, como la #text(fill: ukj-blue)[*probabilidad condicional mínima*], miran a la colocalización o coaglomeración de actividades:
+  - Hay múltiples formas de medir Proximidad. Algunas, como la #text(fill: ukj-blue)[*probabilidad condicional mínima*], miran a la colocalización o coaglomeración de actividades:
 
   #mitex(
   `
@@ -283,7 +283,7 @@ donde $R^(star)=1$ cuando usamos $R$ y $R^(star)=0.25$ cuando usamos $R^("pop")$
 
   #mitex(
     `
-$\omega_{c p}=\frac{\sum_{p,} M_{c p,} \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p^{\prime}}}$ \quad \text{o} \quad $\omega_{c p}=\frac{\sum_{c \prime} M_{c \prime} \phi_{c \prime c}}{\sum_{c \prime} \phi_{c \prime c}}$
+$\omega_{c p}=\frac{\sum_{p\prime} M_{c p\prime} \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p^{\prime}}}$ \quad \text{o} \quad $\omega_{c p}=\frac{\sum_{c \prime} M_{c \prime} \phi_{c \prime c}}{\sum_{c \prime} \phi_{c \prime c}}$
     
     `
   )
@@ -472,11 +472,74 @@ donde $S = M U^(-1) M^'$ es una matriz de similaridad simétrica en que cada ele
 ]
 
 #pinit-highlight-equation-from((9, 10), (9, 10), height: 2.5em, pos: top, fill: rgb(150, 90, 170))[
-  Prob que la economía $c$ carezca de la capacidad $b$
+  Prob que la economía $c$ carezca la capacidad $b$
 ]
 ]
 
+#slide[
+  == ¿Cómo se mueven los países a través del espacio producto? Desarrollando productos cercanos a aquellos que actualmente ya producen @hausmann2014atlas
+  - La Proximidad mide la similaridad entre pares de actividades-productos.
+  - Necesitamos una medida que cuantifique la #text(fill: ukj-blue)[*Distancia*] entre las actividades especializadas en un país y las actividades donde no está especializada.
 
+  #mitex(
+    `
+$d_{c p}=\frac{\sum_{p'} (1 - M_{c p'}) \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p^{\prime}}}$ 
+    
+    `
+  )
+
+  - La distancia nos da una idea de qué tan lejos está cada actividad dado el ecosistema productivo del país.
+  - Sería útil tener una medida holística de las oportunidades que implica la posición de un país en el espacio de productos.
+  - Es razonable #text(fill: ukj-blue)[*incluir no sólo la distancia a las actividades, sino también su complejidad*].
+]
+
+#slide[
+  == Algunos países pueden estar ubicados cerca de pocos productos, mal conectados y relativamente simples. 
+        #figure(
+      image("images/nigeria_ps.png", width: 85%),
+      caption: [Product Space Nigeria 2023. Tomado del Atlas de Complejidad Económica]
+    ) 
+]
+
+#slide[
+  == Mientras que otros pueden tener un rico vecindario sin explotar de productos altamente conectados o complejos. 
+        #figure(
+      image("images/mexico_ps.png", width: 85%),
+      caption: [Product Space México 2023. Tomado del Atlas de Complejidad Económica]
+    ) 
+]
+
+#slide[
+  == Opportunity Value
+  - Los lugares difieren no sólo en lo que se especializan o producen, sino también en sus oportunidades.
+  - Este #text(fill: ukj-blue)[*opportunity value*] de opciones explotadas se cuantifica al agregar el nivel de complejidad de las actividades que actualmente no están especializadas, ponderado por cuán cerca están estos productos del ecosistema productivo actual del lugar.
+  #mitex(
+    `
+    $$
+\text { opportunity value }_c=\sum_{p^{\prime}}\left(1-d_{c p^{\prime}}\right)\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}
+$$ `
+  )
+  - El término $1 - M_(c p')$ se asegura de contabilizar solo actividades no especializadas.
+  - Un valor alto del opportunity value implica estar en la proximidad de más actividades y/o de actividades más complejas.
+
+]
+
+#slide[
+  == Opportunity Gain
+  - Podemos utilizar el opportunity value para calcular el beneficio potencial que obtendría un lugar si se especializa en una nueva actividad particular.
+  - Se llama a este valor como la #text(fill: ukj-blue)[*ganancia de oportunidad (Opportunity Gain)*] que un lugar $c$ obtendría de especializarse en la actividad $p$.
+  - Se calcula como el cambio en el valor de oportunidad obtenido de especializarse en la actividad $p$.
+  - La ganancia de oportunidad cuantifica la contribución de especializarse en una nueva actividad en términos de abrir las puertas a actividades cada vez más complejas.
+  - Formalmente la calculamos como:
+
+  #mitex(
+    `
+    \begin{equation}
+\text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}-\left(1-d_{c p}\right) P C I_p
+\end{equation}
+    `
+  )
+]
 
 #slide[
   #bibliography("references.bib",  style: "apa")
