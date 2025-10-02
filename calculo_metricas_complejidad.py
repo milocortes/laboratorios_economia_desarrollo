@@ -111,7 +111,6 @@ def _(mo):
     \end{equation}
 
     donde $R^{\star}=1$ cuando usamos $R$ y $R^{\star}=0.25$ cuando usamos $R^{\text{pop}}$
-
     """
     )
     return
@@ -173,9 +172,9 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, np):
-    proximity = (M_mat @ M_mat.T)/np.sum(M_mat, axis=1)[np.newaxis,:]
-    proximity = np.maximum(proximity, proximity.T)
+def _(M_mat, np, ubicuidad):
+    proximity = M_mat.T @ M_mat / ubicuidad[np.newaxis, :]  
+    proximity = np.minimum(proximity, proximity.T)
     proximity = np.nan_to_num(proximity)
     proximity
     return (proximity,)
@@ -192,8 +191,6 @@ def _(mo):
     \begin{equation}
     \omega_{c p}=\frac{\sum_{p \prime} M_{c p \prime} \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p^{\prime}}} \quad \circ \quad \omega_{c p}=\frac{\sum_{c^{\prime}} M_{c^{\prime}} \phi_{c^{\prime} c}}{\sum_{c^{\prime}} \phi_{c^{\prime} c}}
     \end{equation}
-
-
     """
     )
     return
@@ -201,9 +198,110 @@ def _(mo):
 
 @app.cell
 def _(M_mat, np, proximity):
-    density = (np.dot(M_mat.T,proximity)/np.sum(proximity, axis=1)).T
+    density = (np.dot(M_mat,proximity)/np.sum(proximity, axis=1))
+    density = np.nan_to_num(density)
     density
     return (density,)
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    # Distancia
+      - La Proximidad mide la similaridad entre pares de actividades-productos.
+      - Necesitamos una medida que cuantifique la **Distancia** entre las actividades especializadas en un país y las actividades donde no está especializada.
+
+
+    \begin{equation}
+    d_{c p}=\frac{\sum_{p'} (1 - M_{c p'}) \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p^{\prime}}}
+    \end{equation}
+
+    - La distancia nos da una idea de qué tan lejos está cada actividad dado el ecosistema productivo del país.
+    """
+    )
+    return
+
+
+@app.cell
+def _(M_mat, np, proximity):
+    distancia = (np.dot((1 - M_mat),proximity)/np.sum(proximity, axis=1))
+    distancia = np.nan_to_num(distancia)
+    distancia
+    return (distancia,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""## Verifica Distancia""")
+    return
+
+
+@app.cell
+def _(M_df, distancia, pd, pl):
+    ## Convertimos a dataframe la matriz de distancia
+    df_distance = pd.DataFrame(distancia, 
+                 columns = [int(i) for i in M_df.columns[1:]], 
+                 index = M_df["country_iso3_code"]
+    ).reset_index().rename(
+        columns = {
+            "index" : "country_iso3_code"
+        }
+    ).melt(id_vars="country_iso3_code").rename( columns=
+        {
+            "variable" : "product_hs92_code",
+            "value" : "distancia"
+        }
+    )
+    df_distance = pl.from_pandas(df_distance)
+    df_distance
+    return (df_distance,)
+
+
+@app.cell
+def _(datos_rca, df_distance):
+    ### Reunimos los datos calculados 
+    df_distancia_test = df_distance.join(
+        datos_rca.select(
+                "country_iso3_code", "product_hs92_code", "distance"
+            ).rename(
+                {
+                    "distance" : "distancia_atlas"
+                }
+            ),
+        on = ["country_iso3_code", "product_hs92_code"]
+    )
+
+    df_distancia_test
+    return (df_distancia_test,)
+
+
+@app.cell
+def _(alt, df_distancia_test):
+    ## Graficamos el ajuste del PCI calculado con el del Atlas
+    distancia_original_vs_distancia_estimada = (
+        alt.Chart(df_distancia_test.filter(country_iso3_code="MEX"))
+        .mark_point()
+        .encode(
+            x=alt.X("distancia_atlas").title("Distancia Atlas").scale(zero=False), 
+            y=alt.Y("distancia").title("Distancia Calculada").scale(zero=False)
+        )
+        .properties(width=800, title='Distancia Atlas vs Distancia Calculada')
+    )
+    distancia_original_vs_distancia_estimada + distancia_original_vs_distancia_estimada.transform_regression('distancia_atlas', 'distancia').mark_line()
+    return
+
+
+@app.cell
+def _(df_distancia_test):
+    ## Calculamos coeficiente de correlación
+    df_distancia_test.drop("country_iso3_code", "product_hs92_code").to_pandas().corr()
+    return
 
 
 @app.cell(hide_code=True)
@@ -227,8 +325,6 @@ def _(mo):
 
     - Estas ecuaciones declaran que la complejidad de una ubicación es una función de la complejidad de las actividades que están presentes en esta, y viceversa.
     - Una economía es tan compleja como las actividades que puede realizar, y una actividad es tan compleja como los lugares que pueden realizarla.
-
-
     """
     )
     return
@@ -278,7 +374,7 @@ def _():
 def _(mo):
     mo.md(
         r"""
-      - Originalmente el cálculo de ECI y PCI se definió mediante un método iterativo llamado  **algoritmo de reflexión** que primero calcula la diversidad y ubicuidad para posteriormente y luego utiliza recursivamente la información de uno para corregir el otro.
+    - Originalmente el cálculo de ECI y PCI se definió mediante un método iterativo llamado  **algoritmo de reflexión** que primero calcula la diversidad y ubicuidad para posteriormente y luego utiliza recursivamente la información de uno para corregir el otro.
       - Se puede demostrar que el método de reflección es equivalente a encontrar los eigenvalores de la matriz $\widetilde{M}$
 
     \begin{equation}
@@ -310,8 +406,7 @@ def _(M_mat, np):
     ## Calculamos ubicuidad
     ubicuidad = M_mat.sum(axis = 0)
     U = np.diag(ubicuidad)
-
-    return D, U, diversidad
+    return D, U, diversidad, ubicuidad
 
 
 @app.cell
@@ -359,7 +454,6 @@ def _(Kc, diversidad, math, np):
     ## Adjust sign of ECI and PCI so it makes sense, as per book
     corr_mat = np.corrcoef(diversidad, Kc)
     s1 = math.copysign(1.0, corr_mat[0,1])
-
     return (s1,)
 
 
@@ -465,7 +559,6 @@ def _(alt, df_pci_test):
         .properties(width=800, title='PCI Atlas vs PCI Calculado')
     )
     pci_original_vs_pci_estimado + pci_original_vs_pci_estimado.transform_regression('pci', 'pci_right').mark_line()
- 
     return
 
 
@@ -473,7 +566,6 @@ def _(alt, df_pci_test):
 def _(df_pci_test):
     ## Calculamos coeficiente de correlación
     df_pci_test.drop("product_hs92_code").to_pandas().corr()
-    
     return
 
 
@@ -500,9 +592,28 @@ def _(mo):
 @app.cell
 def _(M_mat, density, np, pci):
     # Calculamos Opportunity Value
-    ov = density * (1 - M_mat) @ pci
-    ov = np.nan_to_num(ov)
+    ov = ((density.T * (1 - M_mat.T)) * pci[np.newaxis].T).sum(axis=1)
     ov
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -521,7 +632,6 @@ def _(mo):
         \begin{equation}
     \text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}-\left(1-d_{c p}\right) P C I_p
     \end{equation}
-
     """
     )
     return
@@ -531,30 +641,42 @@ def _(mo):
 def _(M_mat, np, pci, proximity):
     og = np.nan_to_num( ((1 - M_mat) * pci).T / np.sum(proximity, axis=1)[np.newaxis]) @ proximity
     og
-    return (og,)
-
-
-@app.cell
-def _(M_df, og, pd):
-    df_cog = pd.DataFrame(og, columns=M_df["country_iso3_code"], index = M_df.columns[1:]).reset_index()
-    df_cog = df_cog.rename(columns={"index" : "product_hs92_code"})
-    df_cog["product_hs92_code"] = df_cog["product_hs92_code"].astype(int)
-    df_cog
-    return (df_cog,)
-
-
-@app.cell
-def _(datos_rca, df_cog, pl):
-    datos_rca.filter(country_iso3_code="AFG").select("product_hs92_code", "cog").join(
-        pl.from_pandas(df_cog).select("product_hs92_code", "AFG"),
-        on = "product_hs92_code"
-    )
     return
 
 
 @app.cell
-def _(df_cog, pl):
-    pl.from_pandas(df_cog)
+def _(M_mat):
+    (1 - M_mat.T)
+    return
+
+
+@app.cell
+def _(M_mat, np, pci, proximity):
+    #(1 - M_mat) @ (proximity * (pci[np.newaxis].T / proximity.sum(axis=1))[:, np.newaxis])
+    return
+
+
+@app.cell
+def _(cdata, np, proximity_mat):
+    cog = (1 - cdata.mcp_t) * (
+            (1 - cdata.mcp_t)
+            @ (proximity_mat * (cdata.pci_t / proximity_mat.sum(axis=1))[:, np.newaxis])
+        )
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
     return
 
 
