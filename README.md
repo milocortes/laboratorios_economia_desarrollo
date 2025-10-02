@@ -9,7 +9,7 @@ Laboratorios de la clase Economía para el Desarrollo del Doctorado en Política
     - [Notebook](https://milocortes.github.io/laboratorios_economia_desarrollo/laboratorios/redes_bipartitas_sistemas_recomendacion/index.html)
 
 - Complejidad Económica (ECI, PCI):
-    - [Slides]()
+    - [Slides](./doc/slides/calculo_metricas_complejidad/calculo_metricas_complejidad.pdf)
     - [Notebook]()
 
 - Identificación de oportunidades de diversificación industrial:
