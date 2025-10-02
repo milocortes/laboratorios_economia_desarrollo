@@ -44,8 +44,10 @@ def _(mo):
 def _(pl):
     ## Cargamos los datos
     anio = 2023
+    github_datos_atlas_url = "https://raw.githubusercontent.com/milocortes/laboratorios_economia_desarrollo/refs/heads/main/datos/hs92_country_product_year_4_2023.csv"
+
     q = (
-        pl.scan_csv("datos/hs92_country_product_year_4.csv", ignore_errors = True).filter(
+        pl.scan_csv(github_datos_atlas_url, ignore_errors = True).filter(
             year=anio
         )
     )
@@ -147,12 +149,12 @@ def _(datos_rca_m):
 
 @app.cell
 def _(M_df, pl):
-    M_mat = M_df.select(
+    M = M_df.select(
         pl.exclude("country_iso3_code")
     ).to_numpy()
 
-    M_mat
-    return (M_mat,)
+    M
+    return (M,)
 
 
 @app.cell(hide_code=True)
@@ -172,8 +174,8 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, np, ubicuidad):
-    proximity = M_mat.T @ M_mat / ubicuidad[np.newaxis, :]  
+def _(M, np, ubicuidad):
+    proximity = M.T @ M / ubicuidad[np.newaxis, :]  
     proximity = np.minimum(proximity, proximity.T)
     proximity = np.nan_to_num(proximity)
     proximity
@@ -197,8 +199,8 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, np, proximity):
-    density = (np.dot(M_mat,proximity)/np.sum(proximity, axis=1))
+def _(M, np, proximity):
+    density = (np.dot(M,proximity)/np.sum(proximity, axis=1))
     density = np.nan_to_num(density)
     density
     return (density,)
@@ -229,8 +231,8 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, np, proximity):
-    distancia = (np.dot((1 - M_mat),proximity)/np.sum(proximity, axis=1))
+def _(M, np, proximity):
+    distancia = (np.dot((1 - M),proximity)/np.sum(proximity, axis=1))
     distancia = np.nan_to_num(distancia)
     distancia
     return (distancia,)
@@ -398,29 +400,29 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, np):
+def _(M, np):
     ## Calculamos diversidad
-    diversidad = M_mat.sum(axis = 1)
+    diversidad = M.sum(axis = 1)
     D = np.diag(diversidad)
 
     ## Calculamos ubicuidad
-    ubicuidad = M_mat.sum(axis = 0)
+    ubicuidad = M.sum(axis = 0)
     U = np.diag(ubicuidad)
     return D, U, diversidad, ubicuidad
 
 
 @app.cell
-def _(D, M_mat, U, np):
+def _(D, M, U, np):
     # Calculamos M tilde cc
-    M_tilde_cc = np.linalg.pinv(D) @ M_mat @ np.linalg.pinv(U) @ M_mat.T
+    M_tilde_cc = np.linalg.pinv(D) @ M @ np.linalg.pinv(U) @ M.T
     M_tilde_cc 
     return (M_tilde_cc,)
 
 
 @app.cell
-def _(D, M_mat, U, np):
+def _(D, M, U, np):
     # Calculamos M tilde pp
-    M_tilde_pp = np.linalg.pinv(U) @ M_mat.T @ np.linalg.pinv(D) @ M_mat
+    M_tilde_pp = np.linalg.pinv(U) @ M.T @ np.linalg.pinv(D) @ M
     M_tilde_pp 
     return (M_tilde_pp,)
 
@@ -480,7 +482,10 @@ def _(mo):
 @app.cell
 def _(anio, pl):
     ### Cargamos datos de ECI de los paises
-    eci_atlas = pl.read_csv("datos/growth_proj_eci_rankings.csv")
+    github_eci_url = "https://raw.githubusercontent.com/milocortes/laboratorios_economia_desarrollo/refs/heads/main/datos/growth_proj_eci_rankings.csv"
+
+    eci_atlas = pl.read_csv(github_eci_url)
+
 
     ### Filtramos para el año de estudio
     eci_atlas = eci_atlas.filter(year = anio)
@@ -573,7 +578,7 @@ def _(df_pci_test):
 def _(mo):
     mo.md(
         r"""
-    # Opportunity Value
+    # Opportunity Value - Economic Complexity Outlook Index (COI)
 
       - Los lugares difieren no sólo en lo que se especializan o producen, sino también en sus oportunidades.
       - Este **opportunity value** de opciones explotadas se cuantifica al agregar el nivel de complejidad de las actividades que actualmente no están especializadas, ponderado por cuán cerca están estos productos del ecosistema productivo actual del lugar.
@@ -590,9 +595,9 @@ def _(mo):
 
 
 @app.cell
-def _(M_mat, density, np, pci):
+def _(M, density, np, pci):
     # Calculamos Opportunity Value
-    ov = ((density.T * (1 - M_mat.T)) * pci[np.newaxis].T).sum(axis=1)
+    ov = ((density.T * (1 - M.T)) * pci[np.newaxis].T).sum(axis=1)
     ov
     return
 
@@ -606,7 +611,7 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    # Opportunity Gain
+    # Opportunity Gain - Opportunity Outlook Gain (COG)
 
       - Podemos utilizar el opportunity value para calcular el beneficio potencial que obtendría un lugar si se especializa en una nueva actividad particular.
       - Se llama a este valor como la **ganancia de oportunidad (Opportunity Gain)** que un lugar $c$ obtendría de especializarse en la actividad $p$.
@@ -615,17 +620,25 @@ def _(mo):
       - Formalmente la calculamos como:
 
         \begin{equation}
+    \text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}
+    \end{equation}
+
+    >En la publicación **The atlas of economic complexity: Mapping paths to prosperity** se especifica la siguiente fórmula para el Opportunity Gain
+    >
+    \begin{equation}
     \text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}-\left(1-d_{c p}\right) P C I_p
     \end{equation}
+
+    > Aquí usaremos la especificación del glosario del portal del Atlas de Complejidad Económica ([liga](https://atlas.hks.harvard.edu/glossary))
     """
     )
     return
 
 
 @app.cell
-def _(M_mat, np, pci, proximity):
-    og = (1-M_mat) * ((1 - M_mat) @ (proximity * (pci/ proximity.sum(axis=1))[:, np.newaxis]))
-    #og = (np.dot(proximity, (1 - M_mat.T) * (pci.T/proximity.sum(axis=1)[np.newaxis]).T) - (density.T*pci[np.newaxis].T)).T
+def _(M, np, pci, proximity):
+    #og = (1-M) * ((1 - M) @ (proximity * (pci/ proximity.sum(axis=1))[:, np.newaxis]))
+    og = (proximity  @ ((proximity.sum(axis=1)**-1)[np.newaxis].T * (1 - M.T) * (pci[np.newaxis].T))).T
     og
     return (og,)
 
@@ -671,9 +684,6 @@ def _(datos_rca, df_cog):
         on = ["country_iso3_code", "product_hs92_code"]
     )
 
-    #df_cog_test = df_cog_test.filter(
-    #    pl.col("cog_atlas") >0.2
-    #)
     return (df_cog_test,)
 
 
@@ -700,8 +710,9 @@ def _(df_cog_test):
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Verifica Gráfica Growth Opportunities Atlas""")
     return
 
 
@@ -722,33 +733,12 @@ def _(alt, test_growth_opp):
             x=alt.X("distancia").title("Distancia").scale(zero=False), 
             y=alt.Y("cog").title("COG").scale(zero=False)
         ).properties(width=800, title='COG vs Distancia')
-
-
     return
 
 
-@app.cell
-def _(M_mat, density, np, pci):
-    # Calculamos Opportunity Value
-    ((density.T * (1 - M_mat.T)) * pci[np.newaxis].T).sum(axis=1)
-
-    return
-
-
-@app.cell
-def _(density, np, pci):
-    (density.T) * pci[np.newaxis].T
-    return
-
-
-@app.cell
-def _(M_mat, np, pci, proximity):
-    np.dot(proximity, (1 - M_mat.T) * pci[np.newaxis].T )
-    return
-
-
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r""" """)
     return
 
 

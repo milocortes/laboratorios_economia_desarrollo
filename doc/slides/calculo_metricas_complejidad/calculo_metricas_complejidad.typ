@@ -392,14 +392,33 @@ donde $S = M U^(-1) M^'$ es una matriz de similaridad simétrica en que cada ele
   
 ]
 
+
 #slide[
+#text(font: "Lato", size : 25pt)[
   == Economic Complexity
 
 - En términos económicos, el #text(fill: red)[*ECI is el vector que mejor divide las economías en grupos basado en las actividades que están presentes en estas*].
 - Economic complexity is intimately connected to SVD, a matrix factorization technique that provides the best way to explain the structure of a matrix
 ]
+]
 
 #slide[
+#text(font: "Lato", size : 25pt)[
+  == Product Complexity
+  El PCI es simétricamente definido al transponer la matriz $M_(c p)$ y encontrando el eigenvector correspondiente al segundo eigenvalor más grande de la matriz $hat(M)$dada por 
+
+  #mitex(
+    `
+    \begin{equation}
+\hat{M}=U^{-1} M^{\prime} D^{-1} M
+\end{equation}
+    `
+  )
+]
+]
+
+#slide[
+  #text(font: "Lato", size : 22pt)[
   == Economic Complexity
   - Las métricas de complejidad económica se suelen normalizar mediante una transformación $Z$ #footnote[Válido para estás medidas dado que no siguen una distribución de colas pesadas]:
   #mitex(
@@ -416,7 +435,7 @@ donde $S = M U^(-1) M^'$ es una matriz de similaridad simétrica en que cada ele
 
   - Valores con un ECI $>0$ representan ubicaciones con una complejidad que es más grande que el promedio en el conjunto de datos analizado#footnote[La interpretación es similar al PCI].
 ]
-
+]
 #slide[
   == Wee need to do all these calculations to find the ECI connected to $Y_(c p)$
         #figure(
@@ -479,6 +498,163 @@ donde $S = M U^(-1) M^'$ es una matriz de similaridad simétrica en que cada ele
 ]
 
 #slide[
+  == ¿Podemos recuperar la matriz de dotación de factores $r$ sí solo observamos la matriz de salida $Y$?
+
+  - #text(fill: ukj-blue)[*SÍ*].
+  - #text(fill: red)[*La Complejidad Económica es un estimador monótono de las dotaciones de factores que es robusto a las variaciones en tamaño y ruido*].
+  - Para un factor, no es dificil calcular la matriz $M_(c c')$ asociada a esta función de producción. 
+  - Esta matriz separa las economías con una probabilidad superior al promedio de tener un factor de aquellas con una probabilidad inferior al promedio.
+  ]
+
+
+#slide[
+  == La forma de la matriz es simple cuando el número de economías y actividades es par 
+#text(font: "Lato", size : 26pt)[
+  #v(1cm)
+
+  #mitex(
+    `
+    \begin{equation}
+M_{c c^{\prime}}=\frac{1}{M_c} \sum_p \frac{M_{c p} M_{c^{\prime} p}}{M_p}
+\end{equation}
+    `
+  )
+
+    #mitext(`
+  \begin{aligned}
+  &M_{c c^{\prime}}=\left\{\begin{array}{lll}
+  \frac{1}{M_p} & \text { if }  \quad r_c \& r_{c^{\prime}} \geq\langle r\rangle \quad \& \quad r_c \& r_{c^{\prime}}<\langle r\rangle\\
+  0 & \text { Otherwise}
+  \end{array}\right.\\
+    `)
+
+
+  #mitex(`
+$$
+M_{c p}=\left[\begin{array}{llllll}
+0 & 0 & 0 & 1 & 1 & 1 \\
+0 & 0 & 0 & 1 & 1 & 1 \\
+1 & 1 & 1 & 0 & 0 & 0 \\
+1 & 1 & 1 & 0 & 0 & 0
+\end{array}\right] \quad \rightarrow \quad M_{c c^{\prime}}=\left[\begin{array}{cccc}
+1 / 2 & 1 / 2 & 0 & 0 \\
+1 / 2 & 1 / 2 & 0 & 0 \\
+0 & 0 & 1 / 2 & 1 / 2 \\
+0 & 0 & 1 / 2 & 1 / 2
+\end{array}\right]
+$$
+  `)
+]
+]
+
+
+#slide[
+  == Se vuelve más complicado cuando son impares, pero el resultado es el mismo
+#text(font: "Lato", size : 18pt)[
+
+  #v(0.5cm)
+  #mitex(
+    `
+  \begin{equation}
+  M_{c p}=\left[\begin{array}{lll|l|lll}
+  0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+  0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+  \hline 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+  \hline 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
+  1 & 1 & 1 & 1 & 0 & 0 & 0
+  \end{array}\right] \quad \rightarrow \quad M_{c c^{\prime}}=\left[\begin{array}{ccccc}
+  3 / 10 & 3 / 10 & 3 / 10 & 1 / 20 & 1 / 20 \\
+  3 / 10 & 3 / 10 & 3 / 10 & 1 / 20 & 1 / 20 \\
+  6 / 35 & 6 / 35 & 11 / 35 & 6 / 35 & 6 / 35 \\
+  1 / 20 & 1 / 20 & 3 / 10 & 3 / 10 & 3 / 10 \\
+  1 / 20 & 1 / 20 & 3 / 10 & 3 / 10 & 3 / 10
+  \end{array}\right]
+  \end{equation}
+    `
+  )
+  #v(0.7cm)
+
+  #mitext(`
+  \begin{aligned}
+  &M_{c c^{\prime}}=\left\{\begin{array}{lll}
+  \frac{1}{M_c}\left(1+\frac{1}{N_p}\right) \quad \text { if } \quad r_c \& r_{c^{\prime}}>\langle r\rangle \quad \text { or } \quad r_c \& r_{c^{\prime}}<\langle r\rangle \\
+  \\
+  \frac{1}{M_c}\left(\frac{1}{N_p}\right) \quad \text { if } \quad r_c>\langle r\rangle \quad \& \quad r_{c^{\prime}}<\langle r\rangle \text { and vice versa }\\
+  \\
+  \frac{1}{N_c}\left(\frac{1}{N_p}+\frac{N_c-1}{M_p}\right) \quad \text { if } \quad c=c^{\prime} \quad \& \quad r_c=\langle r\rangle\\
+  \\
+  \frac{1}{N_c}\left(1+\frac{1}{N_p}\right) \quad \text { if } \quad c \neq c^{\prime} \quad \& \quad \text { if } \quad r_c=\langle r\rangle \\
+  \\
+ \frac{1}{M_c}\left(1+\frac{1}{N_p}\right) \quad \text { if } \quad r_{c^{\prime}}=\langle r\rangle
+  \end{array}\right.\\
+  `)
+
+]
+]
+
+
+
+#slide[
+  == El segundo eigenvector de esta matriz indica a qué grupo pertenece una economía. Estimamos los factores económicos sin tener que definirlos#footnote[Esta es una propiedad de agrupamiento espectral del segundo vector propio de una matriz. Se ha mostrado que matemáticamente el ECI es equivalente al método de agrupamiento espectral para particionar un gráfica pesada y no dirigida $S$, en dos componentes balanceados @mealy2019interpreting. La técnica de agrupamiento espectral es ampliamente usada para tareas de detección de comunidades y reducción de dimensionalidad teniendo un rango amplio de aplicaciones como reconocimiento de imágenes, rankeo de páginas web, clasificación de motif de RNA, etc.].
+#text(font: "Lato", size : 19pt)[
+  #v(1cm)
+
+  #mitex(
+    `
+    \begin{equation}
+M_{c c^{\prime}}=\left[\begin{array}{ccccc}
+3 / 10 & 3 / 10 & 3 / 10 & 1 / 20 & 1 / 20 \\
+3 / 10 & 3 / 10 & 3 / 10 & 1 / 20 & 1 / 20 \\
+6 / 35 & 6 / 35 & 11 / 35 & 6 / 35 & 6 / 35 \\
+1 / 20 & 1 / 20 & 3 / 10 & 3 / 10 & 3 / 10 \\
+1 / 20 & 1 / 20 & 3 / 10 & 3 / 10 & 3 / 10
+\end{array}\right] \quad e_c^2=E C I_c=\left[\begin{array}{c}
+a \\
+a \\
+0 \\
+-a \\
+-a
+\end{array}\right]
+\end{equation}
+    `
+  )
+  #v(1cm)
+
+  #mitex(
+    `
+    \begin{equation}
+\begin{array}{lll}
+e_c^2=E C I_c=a & \text { if } & r_c>\langle r\rangle \\
+e_c^2=E C I_c=-a & \text { if } & r_c<\langle r\rangle \\
+e_c^2=E C I_c=0 & \text { if } & r_c=\langle r\rangle
+\end{array}
+\end{equation}
+    ` 
+  )
+]
+]
+
+
+
+
+#slide[
+  == Interpreting the ECI as a spectral clustering method @mealy2019interpreting
+
+        #figure(
+      image("images/aau1705-f1.jpeg", width: 85%),
+      caption: text(font: "Lato", size : 9pt)[Tomado de Mealy(2019). Each panel shows the ECI vector (in ascending order) (left) and the associated similarity matrix S (right), where rows and columns have been ordered by the ECI and colored by the Sij values. Panels correspond to similarity networks based on (A) randomly generated data with two clear components, (B) HS6 COMTRADE data for 2013, (C) data on employment concentrations in different industries in U.K. local authorities (LAs), and (D) data on employment concentrations in different occupations in U.S. states.]
+    ) 
+]
+
+#slide[
+  == Resultados de agrupación para datos random 
+          #figure(
+      image("images/murphy_spectral_clustering.png", width: 85%),
+      caption: [a) K-means, b) Spectral Clustering. Tomado de @murphy2022probabilistic]
+    ) 
+]
+
+#slide[
   == ¿Cómo se mueven los países a través del espacio producto? Desarrollando productos cercanos a aquellos que actualmente ya producen @hausmann2014atlas
   - La Proximidad mide la similaridad entre pares de actividades-productos.
   - Necesitamos una medida que cuantifique la #text(fill: ukj-blue)[*Distancia*] entre las actividades especializadas en un país y las actividades donde no está especializada.
@@ -512,7 +688,7 @@ $d_{c p}=\frac{\sum_{p'} (1 - M_{c p'}) \phi_{p p^{\prime}}}{\sum_{p,} \phi_{p p
 ]
 
 #slide[
-  == Opportunity Value
+  == Opportunity Value - Economic Complexity Outlook Index (COI)
   - Los lugares difieren no sólo en lo que se especializan o producen, sino también en sus oportunidades.
   - Este #text(fill: ukj-blue)[*opportunity value*] de opciones explotadas se cuantifica al agregar el nivel de complejidad de las actividades que actualmente no están especializadas, ponderado por cuán cerca están estos productos del ecosistema productivo actual del lugar.
   #mitex(
@@ -527,17 +703,28 @@ $$ `
 ]
 
 #slide[
-  == Opportunity Gain
+  == Opportunity Gain - Opportunity Outlook Gain (COG)
   - Podemos utilizar el opportunity value para calcular el beneficio potencial que obtendría un lugar si se especializa en una nueva actividad particular.
   - Se llama a este valor como la #text(fill: ukj-blue)[*ganancia de oportunidad (Opportunity Gain)*] que un lugar $c$ obtendría de especializarse en la actividad $p$.
   - Se calcula como el cambio en el valor de oportunidad obtenido de especializarse en la actividad $p$.
   - La ganancia de oportunidad cuantifica la contribución de especializarse en una nueva actividad en términos de abrir las puertas a actividades cada vez más complejas.
-  - Formalmente la calculamos como:
+  - Formalmente la calculamos como#footnote[
+    En la publicación *The atlas of economic complexity: Mapping paths to prosperity* se especifica la siguiente fórmula para el Opportunity Gain
+      #mitex(
+    `
+    \begin{equation}
+\text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}-\left(1-d_{c p}\right) P C I_p
+\end{equation}
+    `
+  )
+
+  Aquí usaremos la especificación del glosario del portal del Atlas de Complejidad Económica (https://atlas.hks.harvard.edu/glossary)
+  ]:
 
   #mitex(
     `
     \begin{equation}
-\text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}-\left(1-d_{c p}\right) P C I_p
+\text { opportunity gain }_c=\sum_{p^{\prime}} \frac{\phi_{p p^{\prime}}}{\sum_{p^{\prime \prime}} \phi_{p^{\prime \prime} p^{\prime}}}\left(1-M_{c p^{\prime}}\right) P C I_{p^{\prime}}
 \end{equation}
     `
   )
