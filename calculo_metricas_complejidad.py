@@ -602,21 +602,6 @@ def _():
     return
 
 
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -639,34 +624,126 @@ def _(mo):
 
 @app.cell
 def _(M_mat, np, pci, proximity):
-    og = np.nan_to_num( ((1 - M_mat) * pci).T / np.sum(proximity, axis=1)[np.newaxis]) @ proximity
+    og = (1-M_mat) * ((1 - M_mat) @ (proximity * (pci/ proximity.sum(axis=1))[:, np.newaxis]))
+    #og = (np.dot(proximity, (1 - M_mat.T) * (pci.T/proximity.sum(axis=1)[np.newaxis]).T) - (density.T*pci[np.newaxis].T)).T
     og
+    return (og,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Verifica Opportunity Gain""")
     return
 
 
 @app.cell
-def _(M_mat):
-    (1 - M_mat.T)
-    return
+def _(M_df, og, pd, pl):
+    ## Convertimos a dataframe la matriz de distancia
+    df_cog = pd.DataFrame(og, 
+                 columns = [int(i) for i in M_df.columns[1:]], 
+                 index = M_df["country_iso3_code"]
+    ).reset_index().rename(
+        columns = {
+            "index" : "country_iso3_code"
+        }
+    ).melt(id_vars="country_iso3_code").rename( columns=
+        {
+            "variable" : "product_hs92_code",
+            "value" : "cog"
+        }
+    )
+    df_cog = pl.from_pandas(df_cog)
+    df_cog
+    return (df_cog,)
 
 
 @app.cell
-def _(M_mat, np, pci, proximity):
-    #(1 - M_mat) @ (proximity * (pci[np.newaxis].T / proximity.sum(axis=1))[:, np.newaxis])
-    return
+def _(datos_rca, df_cog):
+    ### Reunimos los datos calculados 
+    df_cog_test = df_cog.join(
+        datos_rca.select(
+                "country_iso3_code", "product_hs92_code", "cog"
+            ).rename(
+                {
+                    "cog" : "cog_atlas"
+                }
+            ),
+        on = ["country_iso3_code", "product_hs92_code"]
+    )
+
+    #df_cog_test = df_cog_test.filter(
+    #    pl.col("cog_atlas") >0.2
+    #)
+    return (df_cog_test,)
 
 
 @app.cell
-def _(cdata, np, proximity_mat):
-    cog = (1 - cdata.mcp_t) * (
-            (1 - cdata.mcp_t)
-            @ (proximity_mat * (cdata.pci_t / proximity_mat.sum(axis=1))[:, np.newaxis])
+def _(alt, df_cog_test):
+    ## Graficamos el ajuste del PCI calculado con el del Atlas
+    cog_original_vs_cog_estimada = (
+        alt.Chart(df_cog_test.filter(country_iso3_code="USA"))
+        .mark_point()
+        .encode(
+            x=alt.X("cog_atlas").title("COG Atlas").scale(zero=False), 
+            y=alt.Y("cog").title("COG Calculada").scale(zero=False)
         )
+        .properties(width=800, title='COG Atlas vs COG Calculada')
+    )
+    cog_original_vs_cog_estimada + cog_original_vs_cog_estimada.transform_regression('cog_atlas', 'cog').mark_line()
+    return
+
+
+@app.cell
+def _(df_cog_test):
+    ## Calculamos coeficiente de correlación
+    df_cog_test.drop("country_iso3_code", "product_hs92_code").to_pandas().corr()
     return
 
 
 @app.cell
 def _():
+    return
+
+
+@app.cell
+def _(df_cog_test, df_distancia_test):
+    test_growth_opp = df_cog_test.join(
+        df_distancia_test,
+        on = ["country_iso3_code", "product_hs92_code"]
+    )
+    test_growth_opp
+    return (test_growth_opp,)
+
+
+@app.cell
+def _(alt, test_growth_opp):
+    ## Graficamos el ajuste del PCI calculado con el del Atlas
+    alt.Chart(test_growth_opp.filter(country_iso3_code="MEX")).mark_point().encode(
+            x=alt.X("distancia").title("Distancia").scale(zero=False), 
+            y=alt.Y("cog").title("COG").scale(zero=False)
+        ).properties(width=800, title='COG vs Distancia')
+
+
+    return
+
+
+@app.cell
+def _(M_mat, density, np, pci):
+    # Calculamos Opportunity Value
+    ((density.T * (1 - M_mat.T)) * pci[np.newaxis].T).sum(axis=1)
+
+    return
+
+
+@app.cell
+def _(density, np, pci):
+    (density.T) * pci[np.newaxis].T
+    return
+
+
+@app.cell
+def _(M_mat, np, pci, proximity):
+    np.dot(proximity, (1 - M_mat.T) * pci[np.newaxis].T )
     return
 
 
