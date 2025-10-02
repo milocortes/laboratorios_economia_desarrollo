@@ -92,7 +92,10 @@ def _(datos, pl):
             pl.col("export_value").sum().over("product_hs92_code")/pl.col("export_value").sum()
         )
 
+    ).with_columns(
+        pl.col("product_hs92_code").cast(pl.Int64)
     )
+
     datos_rca
     return (datos_rca,)
 
@@ -133,7 +136,6 @@ def _(datos_rca, pl):
         )
     )
 
-    datos_rca_m
     return (datos_rca_m,)
 
 
@@ -486,7 +488,6 @@ def _(anio, pl):
 
     eci_atlas = pl.read_csv(github_eci_url)
 
-
     ### Filtramos para el año de estudio
     eci_atlas = eci_atlas.filter(year = anio)
 
@@ -683,7 +684,6 @@ def _(datos_rca, df_cog):
             ),
         on = ["country_iso3_code", "product_hs92_code"]
     )
-
     return (df_cog_test,)
 
 
