@@ -9,6 +9,7 @@ dependencies = [
     "marimo>=0.15.5",
     "networkx>=3.5",
     "polars[all]>=1.33.1",
+    "pyfixest>=0.29.0",
     "scipy>=1.16.2",
     "vega-datasets>=0.9.0",
 ]
