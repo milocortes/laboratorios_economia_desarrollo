@@ -254,7 +254,7 @@ def _(calcula_densidad, calcula_rca, censos, pl):
     ### Calculamos la densidad de 2013 y los rca de 2013 y 2023
     activiy_col_name =  "subs_id"
     place_col_name = "cve_geo_mun"
-    value_col_name = "Unidades económicas"
+    value_col_name = "Personal ocupado total"
 
     ### Censo 2023
     censo_2023 = censos.filter(
@@ -632,7 +632,6 @@ def _(df_regresiones_adicionales, pf):
 
     ### Regresiones Desapariciones - Sin Efectos Fijos
     fit_desapariciones_adicionales = pf.feglm(fml = "desapariciones ~ rca_t0 + density + input_presente + output_presente", data = df_regresiones_adicionales, family = "logit", vcov="HC1")
-
     return (
         fit_apariciones_adicionales,
         fit_desapariciones_adicionales,
@@ -722,8 +721,7 @@ def _():
 
 
 @app.cell
-def _(df_regresiones_adicionales):
-    df_regresiones_adicionales
+def _():
     return
 
 
