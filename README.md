@@ -10,12 +10,12 @@ Laboratorios de la clase Economía para el Desarrollo del Doctorado en Política
 
 - Complejidad Económica (ECI, PCI):
     - [Slides](./doc/slides/calculo_metricas_complejidad/calculo_metricas_complejidad.pdf)
-    - [Notebook]()
+    - [Notebook](./calculo_metricas_complejidad.py)
 
 - Identificación de oportunidades de diversificación industrial:
-    - [Slides]()
-    - [Notebook]()
+    - [Slides](./doc/slides/identificacion_oportunidades_diversificacion/identificacion_oportunidades_diversificacion.pdf)
+    - [Notebook](./identificacion_oportunidades_diversificacion.py)
 
 - Regresiones de Crecimiento, Apariciones y Desapariciones:
     - [Slides]()
-    - [Notebook]()
+    - [Notebook](./trayectorias_industriales.R)
